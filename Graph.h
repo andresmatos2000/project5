@@ -111,8 +111,9 @@ void Graph::dfsSCC(Vertex* v){
             dfsSCC(vertexList.find(i)->second);
         }
     }
-if(!tree.empty())
-    scc.push_back(tree);
+    if(!tree.empty()){
+        scc.push_back(tree);
+    }
     tree = {};
 }
 
