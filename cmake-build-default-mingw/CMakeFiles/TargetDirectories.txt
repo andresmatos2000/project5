@@ -1,0 +1,3 @@
+C:/Users/munch/Desktop/BYU/cs236/project5/cmake-build-default-mingw/CMakeFiles/rebuild_cache.dir
+C:/Users/munch/Desktop/BYU/cs236/project5/cmake-build-default-mingw/CMakeFiles/project1.dir
+C:/Users/munch/Desktop/BYU/cs236/project5/cmake-build-default-mingw/CMakeFiles/edit_cache.dir

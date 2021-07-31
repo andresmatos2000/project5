@@ -30,6 +30,12 @@ vector
 set
 -
 
+/users/guest/a/amatos/cs236/Graph.h
+stack
+-
+Vertex.h
+/users/guest/a/amatos/cs236/Vertex.h
+
 /users/guest/a/amatos/cs236/Header.h
 vector
 -
@@ -47,6 +53,8 @@ Tuple.h
 /users/guest/a/amatos/cs236/Tuple.h
 Relation.h
 /users/guest/a/amatos/cs236/Relation.h
+Graph.h
+/users/guest/a/amatos/cs236/Graph.h
 
 /users/guest/a/amatos/cs236/Lexer.h
 vector
@@ -103,6 +111,10 @@ iostream
 /users/guest/a/amatos/cs236/Tuple.h
 vector
 -
+Header.h
+/users/guest/a/amatos/cs236/Header.h
+
+/users/guest/a/amatos/cs236/Vertex.h
 
 /users/guest/a/amatos/cs236/main.cpp
 Lexer.h

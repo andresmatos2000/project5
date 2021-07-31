@@ -29,6 +29,7 @@ CMakeFiles/project1.dir/Token.cpp.o: ../Token.h
 CMakeFiles/project1.dir/main.cpp.o: ../Automaton.h
 CMakeFiles/project1.dir/main.cpp.o: ../Database.h
 CMakeFiles/project1.dir/main.cpp.o: ../DatalogProgram.h
+CMakeFiles/project1.dir/main.cpp.o: ../Graph.h
 CMakeFiles/project1.dir/main.cpp.o: ../Header.h
 CMakeFiles/project1.dir/main.cpp.o: ../Interpreter.h
 CMakeFiles/project1.dir/main.cpp.o: ../Lexer.h
@@ -39,5 +40,6 @@ CMakeFiles/project1.dir/main.cpp.o: ../Relation.h
 CMakeFiles/project1.dir/main.cpp.o: ../Rule.h
 CMakeFiles/project1.dir/main.cpp.o: ../Token.h
 CMakeFiles/project1.dir/main.cpp.o: ../Tuple.h
+CMakeFiles/project1.dir/main.cpp.o: ../Vertex.h
 CMakeFiles/project1.dir/main.cpp.o: ../main.cpp
 

@@ -22,7 +22,6 @@ std::string readCodeIn(char** argv){
 }
 
 int main(int argc, char** argv) {
-
     std::string fullString = readCodeIn(argv);
     Lexer* lexer = new Lexer();
     lexer->Run(fullString);

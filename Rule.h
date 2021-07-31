@@ -10,6 +10,7 @@ class Rule {
 private:
     Predicate* headPredicate;
 public:
+    int ID;
     std::vector<Predicate*> predicateList;
     void setHeadPredicate(Predicate* headPredicate);
     Predicate* getHeadPredicate();
@@ -18,8 +19,15 @@ public:
     Rule(Predicate* headPredicate){
         this->headPredicate = headPredicate;
     }
+    void setID(int i);
+    int getID();
 };
-
+int Rule::getID(){
+    return ID;
+}
+void Rule::setID(int i){
+    ID = i;
+}
 void Rule::setHeadPredicate(Predicate* headPredicate) {
     this->headPredicate = headPredicate;
 }

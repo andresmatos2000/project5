@@ -30,6 +30,7 @@ CMakeFiles/project1.dir/main.cpp.o
  /users/guest/a/amatos/cs236/Automaton.h
  /users/guest/a/amatos/cs236/Database.h
  /users/guest/a/amatos/cs236/DatalogProgram.h
+ /users/guest/a/amatos/cs236/Graph.h
  /users/guest/a/amatos/cs236/Header.h
  /users/guest/a/amatos/cs236/Interpreter.h
  /users/guest/a/amatos/cs236/Lexer.h
@@ -40,4 +41,5 @@ CMakeFiles/project1.dir/main.cpp.o
  /users/guest/a/amatos/cs236/Rule.h
  /users/guest/a/amatos/cs236/Token.h
  /users/guest/a/amatos/cs236/Tuple.h
+ /users/guest/a/amatos/cs236/Vertex.h
  /users/guest/a/amatos/cs236/main.cpp

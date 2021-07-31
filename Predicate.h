@@ -12,7 +12,6 @@ private:
     std::vector<Parameter*> parameters;
     std::string name;
 public:
-
     std::string getName();
     std::vector<Parameter*> getParameters();
     void addParameter(Parameter* parameter);

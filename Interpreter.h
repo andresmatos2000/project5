@@ -9,6 +9,7 @@
 #include "Header.h"
 #include "Tuple.h"
 #include "Relation.h"
+#include "Graph.h"
 class Interpreter {
 private:
     DatalogProgram* datalog;
@@ -26,14 +27,33 @@ public:
     Relation* join(Relation* r1, Relation* r2);
     std::pair<std::vector<std::pair<int,int>>,Header*> combineHeaders(Header* h1, Header* h2);
     Tuple combineTuples(Tuple i, Tuple j);
+    void printSet(std::set<int> set);
 };
 
+
 void Interpreter::createDatabase(){
+    Graph* forwardGraph = new Graph();
+    Graph* reverseGraph = new Graph();
+    for(unsigned int i = 0; i < datalog->Rules.size(); i++){
+        datalog->Rules[i]->setID(i);
+    }
+    for(auto i: datalog->Rules){
+        forwardGraph->buildDependency(i, datalog->Rules);
+    }
+    reverseGraph->buildReverseDependency(forwardGraph);
+    std::cout << "Dependency Graph \n";
+    forwardGraph->toString();
+   // reverseGraph->toString();
+    std::stack<int> postOrder = reverseGraph->dfsForestPost();
+    forwardGraph->dfsForestSCC(postOrder);
+   // forwardGraph->sccToString();
+    std::vector<int> ruleOrder = forwardGraph->ruleOrder();
+    std::cout << std::endl;
     //std::cout << "Creating database" << std::endl;
     for(auto i: datalog->Schemes){
 //        std::cout << i->getName();
         Header* header = new Header(i);
-        Relation* relation = new Relation(i->getName(),header);
+           Relation* relation = new Relation(i->getName(),header);
         database->addRelation(i->getName(),relation);
     };
     for(auto i: datalog->Facts){
@@ -43,36 +63,67 @@ void Interpreter::createDatabase(){
         }
         database->addFactsToRelation(i->getName(),Tuple(temp));
     };
+
     int times = 0;
     std::cout << "Rule Evaluation" << std::endl;
-    restart:
-    times++;
-    bool atleastOneAdded = false;
-        for (auto i: datalog->Rules) {
-            Relation *relation = evaluateRules(i);
-            //relation->toString(relation->getHeader()->getSize());
-//print head
-            std::cout << i->getHeadPredicate()->To_String() + " :- ";
-            for (unsigned int j = 0; j < i->predicateList.size(); j++) {
-                if (j == i->predicateList.size() - 1) {
-                    std::cout << i->predicateList[j]->To_String() + ".";
-                } else {
-                    std::cout << i->predicateList[j]->To_String() + ",";
+
+
+        for (auto h: forwardGraph->scc) {
+            times++;
+            restart:
+            bool atleastOneAdded = false;
+            bool isRecursive = false;
+            if(times == 1){
+                std::cout << "SCC: ";
+                printSet(h);
+                std::cout << std::endl;
+            }
+            for(auto j: h){
+                Rule* i;
+                for(auto k: datalog->Rules){
+                    if(j == k->getID()){
+                        i = k;
+                    }
                 }
+
+                if(forwardGraph->getVertexList().find(j)->second->getRecursive()){
+                    isRecursive = true;
+                }
+
+
+                Relation *relation = evaluateRules(i);
+                //relation->toString(relation->getHeader()->getSize());
+                //print head
+                std::cout << i->getHeadPredicate()->To_String() + " :- ";
+                for (unsigned int j = 0; j < i->predicateList.size(); j++) {
+                    if (j == i->predicateList.size() - 1) {
+                        std::cout << i->predicateList[j]->To_String() + ".";
+                    } else {
+                        std::cout << i->predicateList[j]->To_String() + ",";
+                    }
+                }
+                std::cout << std::endl;
+                int added = database->addTuplesToRelation(relation->getName(), relation);
+                if(added != 0){
+                    atleastOneAdded = true;
+                }
+                //print inside
+                //            database->toString(relation->getName(),added);
+
             }
+
+            if(atleastOneAdded && isRecursive){
+                times++;
+                goto restart;
+            }
+            std::cout  <<  std::to_string(times) + " passes: ";
+            printSet(h);
             std::cout << std::endl;
-            int added = database->addTuplesToRelation(relation->getName(), relation);
-            if(added != 0){
-                atleastOneAdded = true;
-            }
-            //print inside
-//            database->toString(relation->getName(),added);
+            times = 0;
         }
-    if(atleastOneAdded){
-        goto restart;
-    }
+
     std::cout << std::endl;
-    std::cout << "Schemes populated after " + std::to_string(times) + " passes through the Rules." << std::endl << std::endl;
+//    std::cout << "Schemes populated after " + std::to_string(times) + " passes through the Rules." << std::endl << std::endl;
     std::cout << "Query Evaluation" << std::endl;
     for(auto i: datalog->Queries){
        Relation* relation = evaluatePredicate(i);
@@ -83,6 +134,8 @@ void Interpreter::createDatabase(){
             std::cout << i->To_String() + "? No" << std::endl;
         relation->toString(relation->getHeader()->getSize());
     };
+    delete forwardGraph;
+    delete reverseGraph;
 }
 Relation* Interpreter::evaluateRules(Rule* rule) {
     std::vector<Relation*> relations;
@@ -237,15 +290,18 @@ Relation* Interpreter::evaluatePredicate(Predicate* predicate) {
     //PROJECT
     relation = relation->project(relation,recordedVariables,variables);
 
-
-
-//    if(relation->getSize() > 0) {
-//        std::cout << predicate->To_String() + "? Yes(" + std::to_string(relation->getSize()) + ")" << std::endl;
-//    }
-//    else
-//        std::cout << predicate->To_String() + "? No" << std::endl;
-//relation->toString(variables.size());
     return relation;
 }
 
+
+void Interpreter::printSet(std::set<int> set){
+    std::string fullString;
+    for(auto i: set){
+        fullString += "R" + std::to_string(i) + ",";
+    }
+    if(fullString.back() == ','){
+        fullString.pop_back();
+    }
+    std::cout << fullString;
+}
 #endif //PROJECT1_INTERPRETER_H
