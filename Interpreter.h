@@ -43,7 +43,7 @@ void Interpreter::createDatabase(){
     reverseGraph->buildReverseDependency(forwardGraph);
     std::cout << "Dependency Graph \n";
     forwardGraph->toString();
-    reverseGraph->toString();
+   // reverseGraph->toString();
     std::stack<int> postOrder = reverseGraph->dfsForestPost();
     forwardGraph->dfsForestSCC(postOrder);
    // forwardGraph->sccToString();
