@@ -134,8 +134,10 @@ void Graph::dfsForestSCC(std::stack<int> post) {
         if(!vertexList.find(i)->second->isMarked()){
             dfsSCC(vertexList.find(i)->second);
         }
-        scc.push_back(tree);
-        tree = {};
+        if(tree.size() > 0){
+            scc.push_back(tree);
+            tree = {};
+        }
         post.pop();
     }
 }
