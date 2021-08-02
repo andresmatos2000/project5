@@ -43,7 +43,7 @@ void Interpreter::createDatabase(){
     reverseGraph->buildReverseDependency(forwardGraph);
     std::cout << "Dependency Graph \n";
     forwardGraph->toString();
-   // reverseGraph->toString();
+    reverseGraph->toString();
     std::stack<int> postOrder = reverseGraph->dfsForestPost();
     forwardGraph->dfsForestSCC(postOrder);
    // forwardGraph->sccToString();
@@ -66,8 +66,6 @@ void Interpreter::createDatabase(){
 
     int times = 0;
     std::cout << "Rule Evaluation" << std::endl;
-
-
         for (auto h: forwardGraph->scc) {
             times++;
             restart:
@@ -79,6 +77,14 @@ void Interpreter::createDatabase(){
                 std::cout << std::endl;
             }
             for(auto j: h){
+                for(auto g: h){
+                    for(auto p : forwardGraph->getVertexList().find(j)->second->getAdjacencyList()){
+                    if(g == p){
+                        isRecursive = true;
+                    }
+                    }
+                }
+
                 Rule* i;
                 for(auto k: datalog->Rules){
                     if(j == k->getID()){
@@ -89,6 +95,7 @@ void Interpreter::createDatabase(){
                 if(forwardGraph->getVertexList().find(j)->second->getRecursive()){
                     isRecursive = true;
                 }
+
 
 
                 Relation *relation = evaluateRules(i);

@@ -53,19 +53,19 @@ std::stack<int> Graph::getPostOrder(){
     return postOrder;
 }
 void Graph::buildDependency(Rule* rule, std::vector<Rule*> Rules) {
-     Vertex* vertex = new Vertex(rule->getID());
-std::string main = rule->getHeadPredicate()->getName();
+    Vertex* vertex = new Vertex(rule->getID());
+    std::string main = rule->getHeadPredicate()->getName();
     for(auto i: rule->predicateList){
         for(auto j: Rules){
-             if(i->getName() == j->getHeadPredicate()->getName()){
-                 vertex->addAdjacency(j->getID());
-             }
-             if(rule->getHeadPredicate()->getName() == i->getName() ){
-                 vertex->setRecursive();
-             }
+            if(i->getName() == j->getHeadPredicate()->getName()){
+                vertex->addAdjacency(j->getID());
+            }
+            if(rule->getHeadPredicate()->getName() == i->getName() ){
+                vertex->setRecursive();
+            }
         }
     }
- vertexList.insert(std::pair<int, Vertex*>(rule->getID(),vertex));
+    vertexList.insert(std::pair<int, Vertex*>(rule->getID(),vertex));
 };
 
 void Graph::buildReverseDependency(Graph* forwardGraph) {
@@ -88,19 +88,34 @@ void Graph::buildGraph(){
 void Graph::addEdge(int i, int j) {
     vertexList.find(i)->second->addAdjacency(i);
 }
-
+std::stack<int> Graph::dfsForestPost() {
+    for(auto i: vertexList){
+        i.second->unMark();
+    }
+    for(auto v : vertexList){
+        if(!v.second->isMarked()){
+            dfs(v.second);
+        }
+    }
+//    if(!treev.empty()){
+//        postHelper.push_back(treev);
+//    }
+//    treev = {};
+//    for(auto i: postHelper){
+//        for(int j = i.size() - 1; j >=0; j--){
+//            postOrder.push(i[j]);
+//        }
+//    }
+    return postOrder;
+}
 void Graph::dfs(Vertex* v){
     v->mark();
-    treev.push_back(v->getID());
-    //postOrder.push(v->getID());
     for(auto i: v->getAdjacencyList()){
         if(!vertexList.find(i)->second->isMarked()){
             dfs(vertexList.find(i)->second);
         }
     }
-    if(!treev.empty())
-        postHelper.push_back(treev);
-    treev = {};
+    postOrder.push(v->getID());
 }
 
 void Graph::dfsSCC(Vertex* v){
@@ -111,10 +126,6 @@ void Graph::dfsSCC(Vertex* v){
             dfsSCC(vertexList.find(i)->second);
         }
     }
-    if(!tree.empty()){
-        scc.push_back(tree);
-    }
-    tree = {};
 }
 
 void Graph::dfsForestSCC(std::stack<int> post) {
@@ -123,6 +134,8 @@ void Graph::dfsForestSCC(std::stack<int> post) {
         if(!vertexList.find(i)->second->isMarked()){
             dfsSCC(vertexList.find(i)->second);
         }
+        scc.push_back(tree);
+        tree = {};
         post.pop();
     }
 }
@@ -133,7 +146,7 @@ void Graph::toString() {
         fullString +=  "R" + std::to_string(i.first) + ":";
         for(auto j: i.second->getAdjacencyList()){
             fullString += "R" + std::to_string(j) + ",";
-            }
+        }
         if(fullString.substr(fullString.length() - 1) == ","){
             fullString = fullString.substr(0,fullString.length() - 1);
         }
@@ -142,23 +155,7 @@ void Graph::toString() {
     }
 
 }
-std::stack<int> Graph::dfsForestPost() {
-    for(auto i: vertexList){
-    i.second->unMark();
-    }
-        for(auto v : vertexList){
-            if(!v.second->isMarked()){
-                dfs(v.second);
-            }
-        }
 
-        for(auto i: postHelper){
-            for(int j = i.size() - 1; j >=0; j--){
-                postOrder.push(i[j]);
-            }
-        }
-    return postOrder;
-}
 
 void Graph::sccToString(){
     for(auto j: scc){
